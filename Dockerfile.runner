@@ -1,0 +1,38 @@
+# Build upon our pre-packaged Android Build environment
+FROM android-builder
+
+# Switch to root to perform installations and permissions setup
+USER root
+
+# Install sudo and libicu
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sudo \
+    libicu-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root system user named 'runner' and grant it passwordless sudo privileges
+RUN useradd -m runner && \
+    usermod -aG sudo runner && \
+    echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# The official runner package version
+ENV RUNNER_VERSION=2.317.0
+
+# Set up the runner directory and download the GitHub Actions agent
+WORKDIR /home/runner
+RUN curl -o actions-runner-linux.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz && \
+    tar xzf ./actions-runner-linux.tar.gz && \
+    rm actions-runner-linux.tar.gz
+
+# Change directory ownership to the non-root runner user so it has write permissions
+RUN chown -R runner:runner /home/runner /opt/android-sdk
+
+# Copy the dynamic entrypoint script and set execution permissions
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh && chown runner:runner ./entrypoint.sh
+
+# Switch execution back to our non-root user
+USER runner
+
+# Run the entrypoint script on boot
+ENTRYPOINT ["./entrypoint.sh"]

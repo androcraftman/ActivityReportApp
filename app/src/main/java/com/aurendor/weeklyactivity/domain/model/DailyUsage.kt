@@ -5,8 +5,9 @@ import java.time.LocalDate
 import kotlin.time.Duration
 
 data class DailyUsage(
-    val dayOfWeek: DayOfWeek,
     val date: LocalDate,
     val duration: Duration,
     val isPeakDay: Boolean = false
-)
+) {
+    val dayOfWeek: DayOfWeek get() = date.dayOfWeek
+}

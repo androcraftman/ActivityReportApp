@@ -1,6 +1,8 @@
 package com.aurendor.weeklyactivity.di
 
+import com.aurendor.weeklyactivity.data.repository.ActivityReportRepositoryImpl
 import com.aurendor.weeklyactivity.data.repository.PermissionRepositoryImpl
+import com.aurendor.weeklyactivity.domain.repository.ActivityReportRepository
 import com.aurendor.weeklyactivity.domain.repository.PermissionRepository
 import dagger.Binds
 import dagger.Module
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindPermissionRepository(
         impl: PermissionRepositoryImpl
     ): PermissionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindActivityReportRepository(
+        impl: ActivityReportRepositoryImpl
+    ): ActivityReportRepository
 }

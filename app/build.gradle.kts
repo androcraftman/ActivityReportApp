@@ -87,18 +87,20 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             "**/*Hilt*.*",
             "**/Hilt_*.*",
             "**/*_HiltModules*.*",
-            "**/*_Factory*.*",
+            "**/*Factory*.*",
             "**/*_MembersInjector*.*",
             "**/Dagger*.*",
             "**/*ComposableSingletons*.*",
             "**/ui/theme/*.*",
+            "**/hilt_aggregated_deps/**",
+            "**/dagger/**",
         )
 
     val debugTree =
         fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug") {
             exclude(fileFilter)
         } +
-            fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+            fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
                 exclude(fileFilter)
             }
 

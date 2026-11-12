@@ -17,6 +17,7 @@ class GetActivityReportUseCase @Inject constructor(
     private val permissionRepository: PermissionRepository,
     private val clock: Clock
 ) {
+    @Suppress("TooGenericExceptionCaught") // Result wrapper: catch everything except cancellation (rethrown)
     suspend operator fun invoke(): Result<ActivityReport> {
         return try {
             if (!permissionRepository.hasUsageAccess()) {

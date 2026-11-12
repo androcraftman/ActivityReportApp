@@ -28,26 +28,21 @@ class ActivityNotificationListenerService : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
-        if (sbn == null) return
-
-        if (sbn.isOngoing) return
-        val flags = sbn.notification?.flags ?: 0
-        if (flags and Notification.FLAG_GROUP_SUMMARY != 0) return
-
-        val key = sbn.key ?: return
-        val packageName = sbn.packageName ?: return
-        val postTime = sbn.postTime
+        if (sbn == null || !shouldTrack(sbn)) return
 
         serviceScope.launch {
             notificationDao.insert(
                 NotificationEntity(
-                    notificationKey = key,
-                    packageName = packageName,
-                    timestamp = postTime
+                    notificationKey = sbn.key,
+                    packageName = sbn.packageName,
+                    timestamp = sbn.postTime
                 )
             )
         }
     }
+
+    private fun shouldTrack(sbn: StatusBarNotification): Boolean =
+        !sbn.isOngoing && (sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) == 0
 
     override fun onDestroy() {
         super.onDestroy()

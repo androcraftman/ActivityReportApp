@@ -57,6 +57,12 @@ ktlint {
     }
 }
 
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
 jacoco {
     toolVersion = "0.8.12"
 }

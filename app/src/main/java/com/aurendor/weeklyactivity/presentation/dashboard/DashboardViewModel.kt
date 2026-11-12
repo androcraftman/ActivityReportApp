@@ -43,8 +43,12 @@ class DashboardViewModel @Inject constructor(
         when (intent) {
             is DashboardIntent.LoadReport -> loadReport(isRefresh = false)
             is DashboardIntent.Refresh -> loadReport(isRefresh = true)
-            is DashboardIntent.OpenUsageSettings -> emitEffect(DashboardEffect.NavigateToUsageAccessSettings)
-            is DashboardIntent.OpenNotificationSettings -> emitEffect(DashboardEffect.NavigateToNotificationAccessSettings)
+            is DashboardIntent.OpenUsageSettings -> {
+                emitEffect(DashboardEffect.NavigateToUsageAccessSettings)
+            }
+            is DashboardIntent.OpenNotificationSettings -> {
+                emitEffect(DashboardEffect.NavigateToNotificationAccessSettings)
+            }
         }
     }
 

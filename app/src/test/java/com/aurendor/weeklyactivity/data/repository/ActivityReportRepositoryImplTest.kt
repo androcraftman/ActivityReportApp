@@ -36,7 +36,7 @@ class ActivityReportRepositoryImplTest {
     )
 
     @Test
-    fun `getActivityReport with includeNotifications false returns null count and skips notificationDao query`() = runTest(testDispatcher) {
+    fun `getActivityReport with notifications off returns null count and skips DAO`() = runTest(testDispatcher) {
         val startTime = Instant.parse("2026-11-06T00:00:00Z")
         val endTime = Instant.parse("2026-11-12T12:00:00Z")
         val startMillis = startTime.toEpochMilli()

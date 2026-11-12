@@ -58,7 +58,8 @@ fun PermissionCard(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "To track weekly screen time, app installations, and daily metrics, please allow Usage Access in system settings.",
+                text = "To track weekly screen time, app installations, and daily metrics, " +
+                    "please allow Usage Access in system settings.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center

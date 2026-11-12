@@ -118,7 +118,11 @@ private fun DailyBarColumn(
             text = bar.dayLabel,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = if (bar.isPeakDay) FontWeight.Bold else FontWeight.Normal,
-            color = if (bar.isPeakDay) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (bar.isPeakDay) {
+                MaterialTheme.colorScheme.onSurface
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
             textAlign = TextAlign.Center
         )
     }

@@ -134,20 +134,7 @@ class UsageStatsDataSource @Inject constructor(
 
             for (event in events) {
                 if (event.packageName == ownPackageName) continue
-
-                val activityKey = "${event.packageName}/${event.className}"
-                if (event.isForeground) {
-                    openSessions[activityKey] = max(event.timestampMillis, startMillis)
-                } else {
-                    val sessionStart = openSessions.remove(activityKey)
-                    if (sessionStart != null) {
-                        val sessionEnd = min(event.timestampMillis, endMillis)
-                        if (sessionEnd > sessionStart) {
-                            rawSessions.getOrPut(event.packageName) { mutableListOf() }
-                                .add(sessionStart to sessionEnd)
-                        }
-                    }
-                }
+                recordEventSession(event, openSessions, rawSessions, startMillis, endMillis)
             }
 
             for ((activityKey, sessionStart) in openSessions) {
@@ -159,6 +146,26 @@ class UsageStatsDataSource @Inject constructor(
             }
 
             return rawSessions.mapValues { (_, sessions) -> mergeIntervals(sessions) }
+        }
+
+        private fun recordEventSession(
+            event: RawUsageEvent,
+            openSessions: MutableMap<String, Long>,
+            rawSessions: MutableMap<String, MutableList<Pair<Long, Long>>>,
+            startMillis: Long,
+            endMillis: Long
+        ) {
+            val activityKey = "${event.packageName}/${event.className}"
+            if (event.isForeground) {
+                openSessions[activityKey] = max(event.timestampMillis, startMillis)
+                return
+            }
+            val sessionStart = openSessions.remove(activityKey) ?: return
+            val sessionEnd = min(event.timestampMillis, endMillis)
+            if (sessionEnd > sessionStart) {
+                rawSessions.getOrPut(event.packageName) { mutableListOf() }
+                    .add(sessionStart to sessionEnd)
+            }
         }
 
         private fun buildCalendarDays(startDate: LocalDate, endDate: LocalDate): List<LocalDate> {
@@ -178,26 +185,45 @@ class UsageStatsDataSource @Inject constructor(
         ): Pair<Map<LocalDate, Long>, Map<String, Long>> {
             val dailyTotals = calendarDays.associateWith { 0L }.toMutableMap()
             val appTotals = mutableMapOf<String, Long>()
+            val dayWindows = calendarDays.map { day ->
+                val dayStart = day.atStartOfDay(zone).toInstant().toEpochMilli()
+                val dayEnd = day.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
+                DayWindow(day, dayStart, dayEnd)
+            }
 
             for ((pkgName, sessions) in sessionsByPackage) {
-                for ((sessionStart, sessionEnd) in sessions) {
-                    for (day in calendarDays) {
-                        val dayStart = day.atStartOfDay(zone).toInstant().toEpochMilli()
-                        val dayEnd = day.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
-
-                        val overlapStart = max(sessionStart, dayStart)
-                        val overlapEnd = min(sessionEnd, dayEnd)
-
-                        if (overlapEnd > overlapStart) {
-                            val durationMs = overlapEnd - overlapStart
-                            dailyTotals[day] = (dailyTotals[day] ?: 0L) + durationMs
-                            appTotals[pkgName] = (appTotals[pkgName] ?: 0L) + durationMs
-                        }
-                    }
+                for (session in sessions) {
+                    recordSessionOverlap(session, dayWindows, dailyTotals, appTotals, pkgName)
                 }
             }
             return dailyTotals to appTotals
         }
+
+        private fun recordSessionOverlap(
+            session: Pair<Long, Long>,
+            dayWindows: List<DayWindow>,
+            dailyTotals: MutableMap<LocalDate, Long>,
+            appTotals: MutableMap<String, Long>,
+            pkgName: String
+        ) {
+            val (sessionStart, sessionEnd) = session
+            for (window in dayWindows) {
+                val overlapStart = max(sessionStart, window.startMillis)
+                val overlapEnd = min(sessionEnd, window.endMillis)
+
+                if (overlapEnd > overlapStart) {
+                    val durationMs = overlapEnd - overlapStart
+                    dailyTotals[window.day] = (dailyTotals[window.day] ?: 0L) + durationMs
+                    appTotals[pkgName] = (appTotals[pkgName] ?: 0L) + durationMs
+                }
+            }
+        }
+
+        private data class DayWindow(
+            val day: LocalDate,
+            val startMillis: Long,
+            val endMillis: Long
+        )
 
         private fun mergeIntervals(intervals: List<Pair<Long, Long>>): List<Pair<Long, Long>> {
             if (intervals.isEmpty()) return emptyList()

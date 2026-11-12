@@ -5,7 +5,12 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.room)
     jacoco
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
@@ -30,7 +35,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -44,12 +49,17 @@ android {
 }
 
 ktlint {
-    android.set(true)
     ignoreFailures.set(false)
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
     }
+}
+
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
 }
 
 jacoco {
@@ -76,18 +86,22 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             "**/*Hilt*.*",
             "**/Hilt_*.*",
             "**/*_HiltModules*.*",
-            "**/*_Factory*.*",
+            "**/*Factory*.*",
             "**/*_MembersInjector*.*",
             "**/Dagger*.*",
             "**/*ComposableSingletons*.*",
             "**/ui/theme/*.*",
+            "**/hilt_aggregated_deps/**",
+            "**/dagger/**"
         )
 
     val debugTree =
         fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug") {
             exclude(fileFilter)
         } +
-            fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+            fileTree(
+                "${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"
+            ) {
                 exclude(fileFilter)
             }
 
@@ -97,8 +111,11 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     classDirectories.setFrom(files(debugTree))
     executionData.setFrom(
         fileTree(project.layout.buildDirectory.get()) {
-            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec", "jacoco/testDebugUnitTest.exec")
-        },
+            include(
+                "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+                "jacoco/testDebugUnitTest.exec"
+            )
+        }
     )
 }
 
@@ -117,16 +134,21 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

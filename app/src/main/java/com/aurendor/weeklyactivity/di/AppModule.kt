@@ -4,10 +4,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import java.time.Clock
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -24,7 +25,6 @@ annotation class MainDispatcher
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     @IoDispatcher
@@ -39,4 +39,8 @@ object AppModule {
     @Singleton
     @MainDispatcher
     fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+    @Provides
+    @Singleton
+    fun provideClock(): Clock = Clock.systemDefaultZone()
 }

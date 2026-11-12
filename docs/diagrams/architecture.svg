@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 20px; font-weight: 700; fill: #1E293B; }
+      .layer-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+      .box-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 600; fill: #0F172A; }
+      .box-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .tag { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; font-weight: 600; }
+      .arrow { stroke: #64748B; stroke-width: 1.5; fill: none; stroke-dasharray: 4,4; }
+      .arrow-solid { stroke: #3B82F6; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3B82F6" />
+    </marker>
+    <marker id="arrowhead-slate" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748B" />
+    </marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="700" fill="#F8FAFC" rx="12"/>
+
+  <!-- Presentation Layer -->
+  <rect x="30" y="40" width="900" height="150" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+  <text x="50" y="70" class="layer-title" fill="#1D4ED8">PRESENTATION LAYER (Jetpack Compose + MVI)</text>
+
+  <!-- UI Box -->
+  <rect x="50" y="85" width="410" height="85" rx="8" fill="#FFFFFF" stroke="#DBEAFE" stroke-width="1" filter="url(#shadow)"/>
+  <text x="70" y="112" class="box-title">DashboardScreen &amp; Components</text>
+  <text x="70" y="132" class="box-desc">Stateless Compose UI: TotalUsageCard, StatCardsRow,</text>
+  <text x="70" y="148" class="box-desc">DailyUsageChart (7 bars), TopAppsList, PermissionCard</text>
+
+  <!-- ViewModel Box -->
+  <rect x="500" y="85" width="410" height="85" rx="8" fill="#FFFFFF" stroke="#DBEAFE" stroke-width="1" filter="url(#shadow)"/>
+  <text x="520" y="112" class="box-title">DashboardViewModel (MVI State Machine)</text>
+  <text x="520" y="132" class="box-desc">StateFlow&lt;DashboardUiState&gt; with granular SectionStates</text>
+  <text x="520" y="148" class="box-desc">Lifecycle ON_RESUME refresh • Navigation effects via Channel</text>
+
+  <!-- Domain Layer -->
+  <rect x="30" y="225" width="900" height="150" rx="10" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/>
+  <text x="50" y="255" class="layer-title" fill="#15803D">DOMAIN LAYER (Pure Kotlin • Zero Framework Dependencies)</text>
+
+  <!-- Use Cases Box -->
+  <rect x="50" y="270" width="410" height="85" rx="8" fill="#FFFFFF" stroke="#DCFCE7" stroke-width="1" filter="url(#shadow)"/>
+  <text x="70" y="297" class="box-title">Use Cases</text>
+  <text x="70" y="317" class="box-desc">• GetActivityReportUseCase (7-day window, peak day, top 10)</text>
+  <text x="70" y="333" class="box-desc">• CheckPermissionsUseCase (Usage &amp; Notification access)</text>
+
+  <!-- Domain Contracts Box -->
+  <rect x="500" y="270" width="410" height="85" rx="8" fill="#FFFFFF" stroke="#DCFCE7" stroke-width="1" filter="url(#shadow)"/>
+  <text x="520" y="297" class="box-title">Contracts &amp; Pure Models</text>
+  <text x="520" y="317" class="box-desc">ActivityReportRepository, PermissionRepository interfaces</text>
+  <text x="520" y="333" class="box-desc">ActivityReport, DailyUsage, AppUsage, InstallStats, Duration</text>
+
+  <!-- Data Layer -->
+  <rect x="30" y="410" width="900" height="150" rx="10" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="1.5"/>
+  <text x="50" y="440" class="layer-title" fill="#7E22CE">DATA LAYER (Repository • DataSources • Room Database)</text>
+
+  <!-- Repo Box -->
+  <rect x="50" y="455" width="265" height="85" rx="8" fill="#FFFFFF" stroke="#F3E8FF" stroke-width="1" filter="url(#shadow)"/>
+  <text x="65" y="482" class="box-title">ActivityReportRepositoryImpl</text>
+  <text x="65" y="502" class="box-desc">Parallel coroutineScope async fetch</text>
+  <text x="65" y="518" class="box-desc">Top 10 label resolution • Auto-cleanup</text>
+
+  <!-- DataSources Box -->
+  <rect x="340" y="455" width="280" height="85" rx="8" fill="#FFFFFF" stroke="#F3E8FF" stroke-width="1" filter="url(#shadow)"/>
+  <text x="355" y="482" class="box-title">DataSources</text>
+  <text x="355" y="502" class="box-desc">• UsageStatsDataSource (queryEvents pairing)</text>
+  <text x="355" y="518" class="box-desc">• AppInstallDataSource (Launcher queries)</text>
+
+  <!-- Room Box -->
+  <rect x="645" y="455" width="265" height="85" rx="8" fill="#FFFFFF" stroke="#F3E8FF" stroke-width="1" filter="url(#shadow)"/>
+  <text x="660" y="482" class="box-title">Room DB (Delta Persistence)</text>
+  <text x="660" y="502" class="box-desc">• NotificationDao (key deduplicated)</text>
+  <text x="660" y="518" class="box-desc">• AppEventDao (uninstall timestamp)</text>
+
+  <!-- OS / System Layer -->
+  <rect x="30" y="595" width="900" height="75" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="50" y="625" class="layer-title" fill="#334155">ANDROID SYSTEM SERVICES &amp; SUBSYSTEMS</text>
+  <text x="50" y="650" class="box-desc">UsageStatsManager • PackageManager (&lt;queries&gt; launcher) • NotificationListenerService • ACTION_PACKAGE_FULLY_REMOVED</text>
+
+  <!-- Connectors -->
+  <path d="M 460 127 L 500 127" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+  <path d="M 255 170 L 255 270" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+  <path d="M 255 355 L 180 455" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+  <path d="M 315 497 L 340 497" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+  <path d="M 620 497 L 645 497" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+  <path d="M 480 540 L 480 595" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+  <path d="M 777 540 L 777 595" class="arrow-solid" marker-end="url(#arrowhead-blue)"/>
+</svg>

@@ -106,8 +106,8 @@ constructor(
 
             val calendarDays =
                 buildCalendarDays(
-                    startDate = LocalDate.ofInstant(windowStart, zone),
-                    endDate = LocalDate.ofInstant(windowEnd, zone)
+                    startDate = windowStart.atZone(zone).toLocalDate(),
+                    endDate = windowEnd.atZone(zone).toLocalDate()
                 )
 
             val (dailyTotals, appTotals) =

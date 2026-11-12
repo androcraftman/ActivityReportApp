@@ -20,7 +20,7 @@ class GetActivityReportUseCase @Inject constructor(
     suspend operator fun invoke(): Result<ActivityReport> {
         return try {
             if (!permissionRepository.hasUsageAccess()) {
-                return Result.failure(ActivityReportError.UsagePermissionRequired)
+                return Result.failure(ActivityReportError.UsagePermissionRequired())
             }
 
             // Report window covers the last 7 local calendar days up to the current instant

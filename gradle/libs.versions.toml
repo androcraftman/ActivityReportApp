@@ -14,7 +14,7 @@ coroutines = "1.9.0"
 mockk = "1.13.13"
 turbine = "1.2.0"
 hiltNavigationCompose = "1.2.0"
-ktlint = "12.1.2"
+ktlint = "14.2.0"
 detekt = "1.23.8"
 room = "2.7.2"
 

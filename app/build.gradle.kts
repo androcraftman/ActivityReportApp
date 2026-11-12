@@ -35,7 +35,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -49,7 +49,6 @@ android {
 }
 
 ktlint {
-    android.set(true)
     ignoreFailures.set(false)
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
@@ -93,14 +92,16 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             "**/*ComposableSingletons*.*",
             "**/ui/theme/*.*",
             "**/hilt_aggregated_deps/**",
-            "**/dagger/**",
+            "**/dagger/**"
         )
 
     val debugTree =
         fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug") {
             exclude(fileFilter)
         } +
-            fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
+            fileTree(
+                "${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"
+            ) {
                 exclude(fileFilter)
             }
 
@@ -110,8 +111,11 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     classDirectories.setFrom(files(debugTree))
     executionData.setFrom(
         fileTree(project.layout.buildDirectory.get()) {
-            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec", "jacoco/testDebugUnitTest.exec")
-        },
+            include(
+                "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+                "jacoco/testDebugUnitTest.exec"
+            )
+        }
     )
 }
 

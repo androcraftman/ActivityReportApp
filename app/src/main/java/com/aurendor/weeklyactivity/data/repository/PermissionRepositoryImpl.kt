@@ -12,33 +12,32 @@ import javax.inject.Singleton
 
 @Singleton
 class PermissionRepositoryImpl
-    @Inject
-    constructor(
-        @param:ApplicationContext private val context: Context,
-    ) : PermissionRepository {
-        override fun hasUsageAccess(): Boolean {
-            val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+@Inject
+constructor(
+    @param:ApplicationContext private val context: Context
+) : PermissionRepository {
+    override fun hasUsageAccess(): Boolean {
+        val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
 
-            @Suppress("DEPRECATION")
-            val mode =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    appOps.unsafeCheckOpNoThrow(
-                        AppOpsManager.OPSTR_GET_USAGE_STATS,
-                        Process.myUid(),
-                        context.packageName,
-                    )
-                } else {
-                    appOps.checkOpNoThrow(
-                        AppOpsManager.OPSTR_GET_USAGE_STATS,
-                        Process.myUid(),
-                        context.packageName,
-                    )
-                }
-            return mode == AppOpsManager.MODE_ALLOWED
-        }
-
-        override fun hasNotificationAccess(): Boolean =
-            NotificationManagerCompat
-                .getEnabledListenerPackages(context)
-                .contains(context.packageName)
+        @Suppress("DEPRECATION")
+        val mode =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                appOps.unsafeCheckOpNoThrow(
+                    AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    Process.myUid(),
+                    context.packageName
+                )
+            } else {
+                appOps.checkOpNoThrow(
+                    AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    Process.myUid(),
+                    context.packageName
+                )
+            }
+        return mode == AppOpsManager.MODE_ALLOWED
     }
+
+    override fun hasNotificationAccess(): Boolean = NotificationManagerCompat
+        .getEnabledListenerPackages(context)
+        .contains(context.packageName)
+}

@@ -7,12 +7,12 @@ import com.aurendor.weeklyactivity.data.local.dao.NotificationDao
 import com.aurendor.weeklyactivity.data.local.entity.NotificationEntity
 import com.aurendor.weeklyactivity.di.IoDispatcher
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityNotificationListenerService : NotificationListenerService() {
@@ -34,8 +34,8 @@ class ActivityNotificationListenerService : NotificationListenerService() {
                 NotificationEntity(
                     notificationKey = sbn.key,
                     packageName = sbn.packageName,
-                    timestamp = sbn.postTime,
-                ),
+                    timestamp = sbn.postTime
+                )
             )
         }
     }

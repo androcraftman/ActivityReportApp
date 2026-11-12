@@ -7,12 +7,12 @@ import com.aurendor.weeklyactivity.data.local.dao.AppEventDao
 import com.aurendor.weeklyactivity.data.local.entity.AppEventEntity
 import com.aurendor.weeklyactivity.di.IoDispatcher
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Clock
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.time.Clock
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PackageChangeReceiver : BroadcastReceiver() {
@@ -26,10 +26,7 @@ class PackageChangeReceiver : BroadcastReceiver() {
     @IoDispatcher
     lateinit var ioDispatcher: CoroutineDispatcher
 
-    override fun onReceive(
-        context: Context,
-        intent: Intent,
-    ) {
+    override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_PACKAGE_FULLY_REMOVED) return
 
         val packageName = intent.data?.schemeSpecificPart ?: return
@@ -42,8 +39,8 @@ class PackageChangeReceiver : BroadcastReceiver() {
                     AppEventEntity(
                         packageName = packageName,
                         eventType = AppEventEntity.TYPE_REMOVED,
-                        timestamp = clock.millis(),
-                    ),
+                        timestamp = clock.millis()
+                    )
                 )
             } finally {
                 pendingResult.finish()

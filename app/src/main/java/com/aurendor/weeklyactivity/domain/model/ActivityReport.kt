@@ -7,5 +7,5 @@ data class ActivityReport(
     val dailyUsage: List<DailyUsage>,
     val topApps: List<AppUsage>,
     val installStats: InstallStats,
-    val notificationCount: Int?,
+    val notificationCount: Int?
 )

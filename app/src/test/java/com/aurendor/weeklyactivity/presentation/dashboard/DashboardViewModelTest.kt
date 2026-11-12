@@ -9,6 +9,7 @@ import com.aurendor.weeklyactivity.domain.usecase.GetActivityReportUseCase
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlin.time.Duration.Companion.hours
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -20,7 +21,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import kotlin.time.Duration.Companion.hours
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
@@ -44,13 +44,13 @@ class DashboardViewModelTest {
             every { checkPermissionsUseCase() } returns
                 PermissionStatus(
                     hasUsageAccess = false,
-                    hasNotificationAccess = false,
+                    hasNotificationAccess = false
                 )
 
             val viewModel =
                 DashboardViewModel(
                     getActivityReportUseCase = getActivityReportUseCase,
-                    checkPermissionsUseCase = checkPermissionsUseCase,
+                    checkPermissionsUseCase = checkPermissionsUseCase
                 )
 
             viewModel.uiState.test {
@@ -68,7 +68,7 @@ class DashboardViewModelTest {
             every { checkPermissionsUseCase() } returns
                 PermissionStatus(
                     hasUsageAccess = true,
-                    hasNotificationAccess = true,
+                    hasNotificationAccess = true
                 )
             val dummyReport =
                 ActivityReport(
@@ -76,14 +76,14 @@ class DashboardViewModelTest {
                     dailyUsage = emptyList(),
                     topApps = emptyList(),
                     installStats = InstallStats(1, 0),
-                    notificationCount = 5,
+                    notificationCount = 5
                 )
             coEvery { getActivityReportUseCase() } returns Result.success(dummyReport)
 
             val viewModel =
                 DashboardViewModel(
                     getActivityReportUseCase = getActivityReportUseCase,
-                    checkPermissionsUseCase = checkPermissionsUseCase,
+                    checkPermissionsUseCase = checkPermissionsUseCase
                 )
 
             viewModel.effects.test {

@@ -41,20 +41,20 @@ fun StatCardsRow(
     installSection: SectionState<InstallStatsUi>,
     notificationSection: SectionState<NotificationUi>,
     onOpenNotificationSettings: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         InstallCard(
             installSection = installSection,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f)
         )
         NotificationCard(
             notificationSection = notificationSection,
             onOpenNotificationSettings = onOpenNotificationSettings,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -62,22 +62,22 @@ fun StatCardsRow(
 @Composable
 private fun InstallCard(
     installSection: SectionState<InstallStatsUi>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     OutlinedCard(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             InstallIcon(
                 tint = InstallGreen,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             InstallCardContent(installSection = installSection)
@@ -92,17 +92,17 @@ private fun InstallCardContent(installSection: SectionState<InstallStatsUi>) {
         is SectionState.Loading ->
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp).padding(vertical = 4.dp),
-                strokeWidth = 2.dp,
+                strokeWidth = 2.dp
             )
         else -> {
             Text(
                 text = "—",
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Installations",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }
@@ -114,14 +114,14 @@ private fun InstallSuccessContent(data: InstallStatsUi) {
         text = "${data.total}",
         style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = MaterialTheme.colorScheme.onSurface
     )
     Spacer(modifier = Modifier.height(2.dp))
     Text(
         text = "Installations",
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = MaterialTheme.colorScheme.onSurface
     )
     Spacer(modifier = Modifier.height(2.dp))
     val detail =
@@ -133,7 +133,7 @@ private fun InstallSuccessContent(data: InstallStatsUi) {
     Text(
         text = detail,
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
 
@@ -141,29 +141,29 @@ private fun InstallSuccessContent(data: InstallStatsUi) {
 private fun NotificationCard(
     notificationSection: SectionState<NotificationUi>,
     onOpenNotificationSettings: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     OutlinedCard(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Notifications,
                 contentDescription = null,
                 tint = NotificationOrange,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             NotificationCardContent(
                 notificationSection = notificationSection,
-                onOpenNotificationSettings = onOpenNotificationSettings,
+                onOpenNotificationSettings = onOpenNotificationSettings
             )
         }
     }
@@ -172,21 +172,23 @@ private fun NotificationCard(
 @Composable
 private fun NotificationCardContent(
     notificationSection: SectionState<NotificationUi>,
-    onOpenNotificationSettings: () -> Unit,
+    onOpenNotificationSettings: () -> Unit
 ) {
     when (notificationSection) {
         is SectionState.Success -> NotificationSuccessContent(notificationSection.data)
-        is SectionState.PermissionRequired -> NotificationPermissionContent(onOpenNotificationSettings)
+        is SectionState.PermissionRequired -> NotificationPermissionContent(
+            onOpenNotificationSettings
+        )
         is SectionState.Loading ->
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp).padding(vertical = 4.dp),
-                strokeWidth = 2.dp,
+                strokeWidth = 2.dp
             )
         is SectionState.Error ->
             Text(
                 text = "Unavailable",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.error
             )
     }
 }
@@ -197,20 +199,20 @@ private fun NotificationSuccessContent(data: NotificationUi) {
         text = "${data.count}",
         style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = MaterialTheme.colorScheme.onSurface
     )
     Spacer(modifier = Modifier.height(2.dp))
     Text(
         text = "Notifications",
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = MaterialTheme.colorScheme.onSurface
     )
     Spacer(modifier = Modifier.height(2.dp))
     Text(
         text = "Received this week",
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
 
@@ -220,33 +222,30 @@ private fun NotificationPermissionContent(onOpenNotificationSettings: () -> Unit
         text = "Notifications",
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = MaterialTheme.colorScheme.onSurface
     )
     Spacer(modifier = Modifier.height(4.dp))
     Text(
         text = "Permission needed",
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     )
     Spacer(modifier = Modifier.height(8.dp))
     OutlinedButton(
         onClick = onOpenNotificationSettings,
         shape = RoundedCornerShape(8.dp),
-        contentPadding = ButtonDefaults.TextButtonContentPadding,
+        contentPadding = ButtonDefaults.TextButtonContentPadding
     ) {
         Text(
             text = "Grant access",
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }
 
 @Composable
 @Suppress("MagicNumber")
-private fun InstallIcon(
-    tint: Color,
-    modifier: Modifier = Modifier,
-) {
+private fun InstallIcon(tint: Color, modifier: Modifier = Modifier) {
     Canvas(modifier = modifier) {
         val stroke = 2.dp.toPx()
         val w = size.width
@@ -256,28 +255,28 @@ private fun InstallIcon(
             start = Offset(w * 0.5f, h * 0.15f),
             end = Offset(w * 0.5f, h * 0.65f),
             strokeWidth = stroke,
-            cap = StrokeCap.Round,
+            cap = StrokeCap.Round
         )
         drawLine(
             color = tint,
             start = Offset(w * 0.3f, h * 0.45f),
             end = Offset(w * 0.5f, h * 0.65f),
             strokeWidth = stroke,
-            cap = StrokeCap.Round,
+            cap = StrokeCap.Round
         )
         drawLine(
             color = tint,
             start = Offset(w * 0.7f, h * 0.45f),
             end = Offset(w * 0.5f, h * 0.65f),
             strokeWidth = stroke,
-            cap = StrokeCap.Round,
+            cap = StrokeCap.Round
         )
         drawLine(
             color = tint,
             start = Offset(w * 0.2f, h * 0.85f),
             end = Offset(w * 0.8f, h * 0.85f),
             strokeWidth = stroke,
-            cap = StrokeCap.Round,
+            cap = StrokeCap.Round
         )
     }
 }
@@ -288,10 +287,12 @@ private fun InstallIcon(
 fun StatCardsRowPreview() {
     WeeklyActivityTheme {
         StatCardsRow(
-            installSection = SectionState.Success(InstallStatsUi(total = 4, installedCount = 3, removedCount = 1)),
+            installSection = SectionState.Success(
+                InstallStatsUi(total = 4, installedCount = 3, removedCount = 1)
+            ),
             notificationSection = SectionState.Success(NotificationUi(count = 286)),
             onOpenNotificationSettings = {},
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
@@ -302,10 +303,12 @@ fun StatCardsRowPreview() {
 fun StatCardsRowPermissionRequiredPreview() {
     WeeklyActivityTheme {
         StatCardsRow(
-            installSection = SectionState.Success(InstallStatsUi(total = 4, installedCount = 3, removedCount = 1)),
+            installSection = SectionState.Success(
+                InstallStatsUi(total = 4, installedCount = 3, removedCount = 1)
+            ),
             notificationSection = SectionState.PermissionRequired,
             onOpenNotificationSettings = {},
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(16.dp)
         )
     }
 }

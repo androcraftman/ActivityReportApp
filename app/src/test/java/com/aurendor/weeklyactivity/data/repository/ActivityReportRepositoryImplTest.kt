@@ -10,14 +10,14 @@ import com.aurendor.weeklyactivity.domain.model.DailyUsage
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import java.time.Instant
+import java.time.LocalDate
+import kotlin.time.Duration.Companion.hours
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import java.time.Instant
-import java.time.LocalDate
-import kotlin.time.Duration.Companion.hours
 
 class ActivityReportRepositoryImplTest {
     private val usageStatsDataSource: UsageStatsDataSource = mockk()
@@ -32,7 +32,7 @@ class ActivityReportRepositoryImplTest {
             appInstallDataSource = appInstallDataSource,
             notificationDao = notificationDao,
             appEventDao = appEventDao,
-            ioDispatcher = testDispatcher,
+            ioDispatcher = testDispatcher
         )
 
     @Test
@@ -48,20 +48,23 @@ class ActivityReportRepositoryImplTest {
             val dailyList =
                 listOf(
                     DailyUsage(LocalDate.of(2026, 11, 6), 2.hours),
-                    DailyUsage(LocalDate.of(2026, 11, 7), 3.hours),
+                    DailyUsage(LocalDate.of(2026, 11, 7), 3.hours)
                 )
             val appDurations =
                 mapOf(
                     "com.example.youtube" to 3.hours,
-                    "com.example.chat" to 2.hours,
+                    "com.example.chat" to 2.hours
                 )
             coEvery { usageStatsDataSource.getUsageMetrics(startTime, endTime) } returns
                 UsageMetricsResult(
                     dailyUsage = dailyList,
-                    appDurations = appDurations,
+                    appDurations = appDurations
                 )
             coEvery { appInstallDataSource.getInstalledCount(startTime) } returns 3
-            coEvery { appEventDao.countEventsBetween(AppEventEntity.TYPE_REMOVED, any(), any()) } returns 1
+            coEvery {
+                appEventDao.countEventsBetween(AppEventEntity.TYPE_REMOVED, any(), any())
+            } returns
+                1
             coEvery { appInstallDataSource.getAppLabel("com.example.youtube") } returns "YouTube"
             coEvery { appInstallDataSource.getAppLabel("com.example.chat") } returns "Chat"
 
@@ -69,7 +72,7 @@ class ActivityReportRepositoryImplTest {
                 repository.getActivityReport(
                     startTime = startTime,
                     endTime = endTime,
-                    includeNotifications = false,
+                    includeNotifications = false
                 )
 
             assertNull(report.notificationCount)

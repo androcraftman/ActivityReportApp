@@ -12,10 +12,7 @@ interface NotificationDao {
     suspend fun insert(notification: NotificationEntity)
 
     @Query("SELECT COUNT(*) FROM notifications WHERE timestamp BETWEEN :startTime AND :endTime")
-    suspend fun countBetween(
-        startTime: Long,
-        endTime: Long,
-    ): Int
+    suspend fun countBetween(startTime: Long, endTime: Long): Int
 
     @Query("DELETE FROM notifications WHERE timestamp < :cutoff")
     suspend fun deleteOlderThan(cutoff: Long): Int

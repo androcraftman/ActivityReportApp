@@ -16,35 +16,32 @@ import androidx.compose.ui.unit.sp
 import com.aurendor.weeklyactivity.ui.theme.WeeklyActivityTheme
 
 @Composable
-fun TotalUsageCard(
-    totalUsageFormatted: String,
-    modifier: Modifier = Modifier,
-) {
+fun TotalUsageCard(totalUsageFormatted: String, modifier: Modifier = Modifier) {
     Column(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
+        modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp)
     ) {
         Text(
             text = "TOTAL APP USAGE",
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 1.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = totalUsageFormatted,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Across your applications",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -55,7 +52,7 @@ fun TotalUsageCardPreview() {
     WeeklyActivityTheme {
         TotalUsageCard(
             totalUsageFormatted = "24h 35m",
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(16.dp)
         )
     }
 }

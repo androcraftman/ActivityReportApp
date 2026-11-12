@@ -16,13 +16,13 @@ import androidx.room.PrimaryKey
     tableName = "notifications",
     indices = [
         Index(value = ["notificationKey"], unique = true),
-        Index(value = ["timestamp"]),
-    ],
+        Index(value = ["timestamp"])
+    ]
 )
 data class NotificationEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val notificationKey: String,
     val packageName: String,
-    val timestamp: Long,
+    val timestamp: Long
 )

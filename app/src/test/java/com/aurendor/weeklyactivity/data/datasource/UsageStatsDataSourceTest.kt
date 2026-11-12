@@ -1,12 +1,12 @@
 package com.aurendor.weeklyactivity.data.datasource
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class UsageStatsDataSourceTest {
     @Test
@@ -21,14 +21,14 @@ class UsageStatsDataSourceTest {
                     packageName = "com.example.app",
                     className = "MainActivity",
                     isForeground = true,
-                    timestampMillis = Instant.parse("2026-11-07T23:30:00Z").toEpochMilli(),
+                    timestampMillis = Instant.parse("2026-11-07T23:30:00Z").toEpochMilli()
                 ),
                 RawUsageEvent(
                     packageName = "com.example.app",
                     className = "MainActivity",
                     isForeground = false,
-                    timestampMillis = Instant.parse("2026-11-08T00:30:00Z").toEpochMilli(),
-                ),
+                    timestampMillis = Instant.parse("2026-11-08T00:30:00Z").toEpochMilli()
+                )
             )
 
         val result =
@@ -37,7 +37,7 @@ class UsageStatsDataSourceTest {
                 windowStart = windowStart,
                 windowEnd = windowEnd,
                 zone = zone,
-                ownPackageName = "com.aurendor.weeklyactivity",
+                ownPackageName = "com.aurendor.weeklyactivity"
             )
 
         assertEquals(7, result.dailyUsage.size)

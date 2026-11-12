@@ -17,15 +17,12 @@ import javax.inject.Singleton
 object DatabaseModule {
     @Provides
     @Singleton
-    fun provideAppDatabase(
-        @ApplicationContext context: Context,
-    ): AppDatabase =
-        Room
-            .databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                AppDatabase.DATABASE_NAME,
-            ).build()
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase = Room
+        .databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            AppDatabase.DATABASE_NAME
+        ).build()
 
     @Provides
     fun provideNotificationDao(database: AppDatabase): NotificationDao = database.notificationDao()

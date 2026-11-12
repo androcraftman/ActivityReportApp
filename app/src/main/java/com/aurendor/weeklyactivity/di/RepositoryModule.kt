@@ -19,5 +19,7 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindActivityReportRepository(impl: ActivityReportRepositoryImpl): ActivityReportRepository
+    abstract fun bindActivityReportRepository(
+        impl: ActivityReportRepositoryImpl
+    ): ActivityReportRepository
 }

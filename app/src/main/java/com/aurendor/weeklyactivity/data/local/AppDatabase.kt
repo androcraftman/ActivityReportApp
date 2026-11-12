@@ -10,13 +10,14 @@ import com.aurendor.weeklyactivity.data.local.entity.NotificationEntity
 @Database(
     entities = [
         NotificationEntity::class,
-        AppEventEntity::class
+        AppEventEntity::class,
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun notificationDao(): NotificationDao
+
     abstract fun appEventDao(): AppEventDao
 
     companion object {

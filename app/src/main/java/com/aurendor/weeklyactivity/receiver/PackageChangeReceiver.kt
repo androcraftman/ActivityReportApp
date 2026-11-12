@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class PackageChangeReceiver : BroadcastReceiver() {
-
     @Inject
     lateinit var appEventDao: AppEventDao
 
@@ -27,7 +26,10 @@ class PackageChangeReceiver : BroadcastReceiver() {
     @IoDispatcher
     lateinit var ioDispatcher: CoroutineDispatcher
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         if (intent.action != Intent.ACTION_PACKAGE_FULLY_REMOVED) return
 
         val packageName = intent.data?.schemeSpecificPart ?: return
@@ -40,8 +42,8 @@ class PackageChangeReceiver : BroadcastReceiver() {
                     AppEventEntity(
                         packageName = packageName,
                         eventType = AppEventEntity.TYPE_REMOVED,
-                        timestamp = clock.millis()
-                    )
+                        timestamp = clock.millis(),
+                    ),
                 )
             } finally {
                 pendingResult.finish()

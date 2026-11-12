@@ -7,7 +7,7 @@ import kotlin.time.Duration
 data class DailyUsage(
     val date: LocalDate,
     val duration: Duration,
-    val isPeakDay: Boolean = false
+    val isPeakDay: Boolean = false,
 ) {
     val dayOfWeek: DayOfWeek get() = date.dayOfWeek
 }

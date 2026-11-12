@@ -25,7 +25,6 @@ annotation class MainDispatcher
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     @IoDispatcher

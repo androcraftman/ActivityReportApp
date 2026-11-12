@@ -45,7 +45,7 @@ import com.aurendor.weeklyactivity.ui.theme.WeeklyActivityTheme
 @Composable
 fun DashboardRoute(
     modifier: Modifier = Modifier,
-    viewModel: DashboardViewModel = hiltViewModel()
+    viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -70,7 +70,7 @@ fun DashboardRoute(
     DashboardScreen(
         uiState = uiState,
         onIntent = viewModel::processIntent,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -78,15 +78,16 @@ fun DashboardRoute(
 fun DashboardScreen(
     uiState: DashboardUiState,
     onIntent: (DashboardIntent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         DashboardHeader()
 
@@ -94,7 +95,7 @@ fun DashboardScreen(
             is SectionState.PermissionRequired -> {
                 Spacer(modifier = Modifier.height(24.dp))
                 PermissionCard(
-                    onOpenUsageSettings = { onIntent(DashboardIntent.OpenUsageSettings) }
+                    onOpenUsageSettings = { onIntent(DashboardIntent.OpenUsageSettings) },
                 )
             }
             is SectionState.Loading -> {
@@ -104,14 +105,14 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 ErrorCard(
                     message = usageState.message,
-                    onRetry = { onIntent(DashboardIntent.Refresh) }
+                    onRetry = { onIntent(DashboardIntent.Refresh) },
                 )
             }
             is SectionState.Success -> {
                 DashboardSuccessContent(
                     uiState = uiState,
                     usage = usageState.data,
-                    onIntent = onIntent
+                    onIntent = onIntent,
                 )
             }
         }
@@ -122,14 +123,14 @@ fun DashboardScreen(
 private fun DashboardSuccessContent(
     uiState: DashboardUiState,
     usage: UsageReportUi,
-    onIntent: (DashboardIntent) -> Unit
+    onIntent: (DashboardIntent) -> Unit,
 ) {
     TotalUsageCard(totalUsageFormatted = usage.totalUsageFormatted)
     Spacer(modifier = Modifier.height(8.dp))
     StatCardsRow(
         installSection = uiState.installSection,
         notificationSection = uiState.notificationSection,
-        onOpenNotificationSettings = { onIntent(DashboardIntent.OpenNotificationSettings) }
+        onOpenNotificationSettings = { onIntent(DashboardIntent.OpenNotificationSettings) },
     )
     Spacer(modifier = Modifier.height(16.dp))
     DailyUsageChart(dailyBars = usage.dailyBars)
@@ -139,18 +140,17 @@ private fun DashboardSuccessContent(
 }
 
 @Composable
-private fun LoadingContent(
-    modifier: Modifier = Modifier
-) {
+private fun LoadingContent(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(240.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(240.dp),
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(40.dp),
-            strokeWidth = 3.dp
+            strokeWidth = 3.dp,
         )
     }
 }
@@ -159,32 +159,33 @@ private fun LoadingContent(
 private fun ErrorCard(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = "Failed to load report",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onRetry) {
@@ -200,29 +201,33 @@ private fun ErrorCard(
 fun DashboardScreenSuccessPreview() {
     WeeklyActivityTheme {
         DashboardScreen(
-            uiState = DashboardUiState(
-                usageSection = SectionState.Success(
-                    UsageReportUi(
-                        totalUsageFormatted = "24h 35m",
-                        dailyBars = listOf(
-                            DailyBarUi("Mon", "2h", 0.3f, false),
-                            DailyBarUi("Tue", "3h", 0.5f, false),
-                            DailyBarUi("Wed", "4h", 0.7f, false),
-                            DailyBarUi("Thu", "2h", 0.3f, false),
-                            DailyBarUi("Fri", "6h", 1.0f, true),
-                            DailyBarUi("Sat", "4h", 0.7f, false),
-                            DailyBarUi("Sun", "3h", 0.5f, false)
+            uiState =
+                DashboardUiState(
+                    usageSection =
+                        SectionState.Success(
+                            UsageReportUi(
+                                totalUsageFormatted = "24h 35m",
+                                dailyBars =
+                                    listOf(
+                                        DailyBarUi("Mon", "2h", 0.3f, false),
+                                        DailyBarUi("Tue", "3h", 0.5f, false),
+                                        DailyBarUi("Wed", "4h", 0.7f, false),
+                                        DailyBarUi("Thu", "2h", 0.3f, false),
+                                        DailyBarUi("Fri", "6h", 1.0f, true),
+                                        DailyBarUi("Sat", "4h", 0.7f, false),
+                                        DailyBarUi("Sun", "3h", 0.5f, false),
+                                    ),
+                                topApps =
+                                    listOf(
+                                        AppUsageUi(1, "com.youtube", "YouTube", "6h 20m", 1.0f),
+                                        AppUsageUi(2, "com.whatsapp", "WhatsApp", "4h 15m", 0.67f),
+                                    ),
+                            ),
                         ),
-                        topApps = listOf(
-                            AppUsageUi(1, "com.youtube", "YouTube", "6h 20m", 1.0f),
-                            AppUsageUi(2, "com.whatsapp", "WhatsApp", "4h 15m", 0.67f)
-                        )
-                    )
+                    installSection = SectionState.Success(InstallStatsUi(4, 3, 1)),
+                    notificationSection = SectionState.Success(NotificationUi(286)),
                 ),
-                installSection = SectionState.Success(InstallStatsUi(4, 3, 1)),
-                notificationSection = SectionState.Success(NotificationUi(286))
-            ),
-            onIntent = {}
+            onIntent = {},
         )
     }
 }
@@ -232,12 +237,13 @@ fun DashboardScreenSuccessPreview() {
 fun DashboardScreenPermissionRequiredPreview() {
     WeeklyActivityTheme {
         DashboardScreen(
-            uiState = DashboardUiState(
-                usageSection = SectionState.PermissionRequired,
-                installSection = SectionState.PermissionRequired,
-                notificationSection = SectionState.PermissionRequired
-            ),
-            onIntent = {}
+            uiState =
+                DashboardUiState(
+                    usageSection = SectionState.PermissionRequired,
+                    installSection = SectionState.PermissionRequired,
+                    notificationSection = SectionState.PermissionRequired,
+                ),
+            onIntent = {},
         )
     }
 }

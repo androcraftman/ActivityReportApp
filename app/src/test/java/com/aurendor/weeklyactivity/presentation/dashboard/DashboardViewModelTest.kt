@@ -24,7 +24,6 @@ import kotlin.time.Duration.Companion.hours
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
-
     private val getActivityReportUseCase: GetActivityReportUseCase = mockk()
     private val checkPermissionsUseCase: CheckPermissionsUseCase = mockk()
     private val testDispatcher = StandardTestDispatcher()
@@ -40,51 +39,58 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun `usage permission missing sets usage section to PermissionRequired`() = runTest(testDispatcher) {
-        every { checkPermissionsUseCase() } returns PermissionStatus(
-            hasUsageAccess = false,
-            hasNotificationAccess = false
-        )
+    fun `usage permission missing sets usage section to PermissionRequired`() =
+        runTest(testDispatcher) {
+            every { checkPermissionsUseCase() } returns
+                PermissionStatus(
+                    hasUsageAccess = false,
+                    hasNotificationAccess = false,
+                )
 
-        val viewModel = DashboardViewModel(
-            getActivityReportUseCase = getActivityReportUseCase,
-            checkPermissionsUseCase = checkPermissionsUseCase
-        )
+            val viewModel =
+                DashboardViewModel(
+                    getActivityReportUseCase = getActivityReportUseCase,
+                    checkPermissionsUseCase = checkPermissionsUseCase,
+                )
 
-        viewModel.uiState.test {
-            testScheduler.advanceUntilIdle()
-            val state = expectMostRecentItem()
-            assertTrue(state.usageSection is SectionState.PermissionRequired)
-            assertTrue(state.installSection is SectionState.PermissionRequired)
-            assertTrue(state.notificationSection is SectionState.PermissionRequired)
+            viewModel.uiState.test {
+                testScheduler.advanceUntilIdle()
+                val state = expectMostRecentItem()
+                assertTrue(state.usageSection is SectionState.PermissionRequired)
+                assertTrue(state.installSection is SectionState.PermissionRequired)
+                assertTrue(state.notificationSection is SectionState.PermissionRequired)
+            }
         }
-    }
 
     @Test
-    fun `open usage settings intent emits NavigateToUsageAccessSettings effect`() = runTest(testDispatcher) {
-        every { checkPermissionsUseCase() } returns PermissionStatus(
-            hasUsageAccess = true,
-            hasNotificationAccess = true
-        )
-        val dummyReport = ActivityReport(
-            totalForegroundUsage = 10.hours,
-            dailyUsage = emptyList(),
-            topApps = emptyList(),
-            installStats = InstallStats(1, 0),
-            notificationCount = 5
-        )
-        coEvery { getActivityReportUseCase() } returns Result.success(dummyReport)
+    fun `open usage settings intent emits NavigateToUsageAccessSettings effect`() =
+        runTest(testDispatcher) {
+            every { checkPermissionsUseCase() } returns
+                PermissionStatus(
+                    hasUsageAccess = true,
+                    hasNotificationAccess = true,
+                )
+            val dummyReport =
+                ActivityReport(
+                    totalForegroundUsage = 10.hours,
+                    dailyUsage = emptyList(),
+                    topApps = emptyList(),
+                    installStats = InstallStats(1, 0),
+                    notificationCount = 5,
+                )
+            coEvery { getActivityReportUseCase() } returns Result.success(dummyReport)
 
-        val viewModel = DashboardViewModel(
-            getActivityReportUseCase = getActivityReportUseCase,
-            checkPermissionsUseCase = checkPermissionsUseCase
-        )
+            val viewModel =
+                DashboardViewModel(
+                    getActivityReportUseCase = getActivityReportUseCase,
+                    checkPermissionsUseCase = checkPermissionsUseCase,
+                )
 
-        viewModel.effects.test {
-            viewModel.processIntent(DashboardIntent.OpenUsageSettings)
-            testScheduler.advanceUntilIdle()
-            val effect = awaitItem()
-            assertEquals(DashboardEffect.NavigateToUsageAccessSettings, effect)
+            viewModel.effects.test {
+                viewModel.processIntent(DashboardIntent.OpenUsageSettings)
+                testScheduler.advanceUntilIdle()
+                val effect = awaitItem()
+                assertEquals(DashboardEffect.NavigateToUsageAccessSettings, effect)
+            }
         }
-    }
 }

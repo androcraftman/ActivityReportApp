@@ -7,6 +7,6 @@ interface ActivityReportRepository {
     suspend fun getActivityReport(
         startTime: Instant,
         endTime: Instant,
-        includeNotifications: Boolean
+        includeNotifications: Boolean,
     ): ActivityReport
 }

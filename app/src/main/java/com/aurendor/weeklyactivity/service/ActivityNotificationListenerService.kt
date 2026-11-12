@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityNotificationListenerService : NotificationListenerService() {
-
     @Inject
     lateinit var notificationDao: NotificationDao
 
@@ -35,8 +34,8 @@ class ActivityNotificationListenerService : NotificationListenerService() {
                 NotificationEntity(
                     notificationKey = sbn.key,
                     packageName = sbn.packageName,
-                    timestamp = sbn.postTime
-                )
+                    timestamp = sbn.postTime,
+                ),
             )
         }
     }

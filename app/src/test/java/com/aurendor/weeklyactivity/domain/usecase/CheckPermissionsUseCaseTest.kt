@@ -8,7 +8,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CheckPermissionsUseCaseTest {
-
     private val permissionRepository: PermissionRepository = mockk()
     private val useCase = CheckPermissionsUseCase(permissionRepository)
 

@@ -12,73 +12,78 @@ import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.time.Duration
 
-class GetActivityReportUseCase @Inject constructor(
-    private val activityReportRepository: ActivityReportRepository,
-    private val permissionRepository: PermissionRepository,
-    private val clock: Clock
-) {
-    @Suppress("TooGenericExceptionCaught") // Result wrapper: catch everything except cancellation (rethrown)
-    suspend operator fun invoke(): Result<ActivityReport> {
-        return try {
-            if (!permissionRepository.hasUsageAccess()) {
-                return Result.failure(ActivityReportError.UsagePermissionRequired())
-            }
+class GetActivityReportUseCase
+    @Inject
+    constructor(
+        private val activityReportRepository: ActivityReportRepository,
+        private val permissionRepository: PermissionRepository,
+        private val clock: Clock,
+    ) {
+        @Suppress("TooGenericExceptionCaught") // Result wrapper: catch everything except cancellation (rethrown)
+        suspend operator fun invoke(): Result<ActivityReport> {
+            return try {
+                if (!permissionRepository.hasUsageAccess()) {
+                    return Result.failure(ActivityReportError.UsagePermissionRequired())
+                }
 
-            // Report window covers the last 7 local calendar days up to the current instant
-            val today = LocalDate.now(clock)
-            val startTime = today.minusDays(REPORT_DAYS - 1).atStartOfDay(clock.zone).toInstant()
-            val endTime = clock.instant()
-            val includeNotifications = permissionRepository.hasNotificationAccess()
+                // Report window covers the last 7 local calendar days up to the current instant
+                val today = LocalDate.now(clock)
+                val startTime = today.minusDays(REPORT_DAYS - 1).atStartOfDay(clock.zone).toInstant()
+                val endTime = clock.instant()
+                val includeNotifications = permissionRepository.hasNotificationAccess()
 
-            val rawReport = activityReportRepository.getActivityReport(
-                startTime = startTime,
-                endTime = endTime,
-                includeNotifications = includeNotifications
-            )
+                val rawReport =
+                    activityReportRepository.getActivityReport(
+                        startTime = startTime,
+                        endTime = endTime,
+                        includeNotifications = includeNotifications,
+                    )
 
-            val processedDailyUsage = highlightPeakDay(rawReport.dailyUsage)
-            val processedTopApps = normalizeAndRankTopApps(rawReport.topApps)
+                val processedDailyUsage = highlightPeakDay(rawReport.dailyUsage)
+                val processedTopApps = normalizeAndRankTopApps(rawReport.topApps)
 
-            Result.success(
-                rawReport.copy(
-                    dailyUsage = processedDailyUsage,
-                    topApps = processedTopApps
+                Result.success(
+                    rawReport.copy(
+                        dailyUsage = processedDailyUsage,
+                        topApps = processedTopApps,
+                    ),
                 )
-            )
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    private fun highlightPeakDay(dailyList: List<DailyUsage>): List<DailyUsage> {
-        val peakDuration = dailyList.maxOfOrNull { it.duration } ?: Duration.ZERO
-        return dailyList.map { daily ->
-            daily.copy(isPeakDay = peakDuration > Duration.ZERO && daily.duration == peakDuration)
-        }
-    }
-
-    private fun normalizeAndRankTopApps(apps: List<AppUsage>): List<AppUsage> {
-        val sortedApps = apps
-            .filter { it.usageDuration > Duration.ZERO }
-            .sortedByDescending { it.usageDuration }
-            .take(MAX_TOP_APPS)
-
-        val highestDuration = sortedApps.firstOrNull()?.usageDuration ?: Duration.ZERO
-
-        return sortedApps.map { app ->
-            val percentage = if (highestDuration > Duration.ZERO) {
-                (app.usageDuration / highestDuration).toFloat().coerceIn(0f, 1f)
-            } else {
-                0f
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Result.failure(e)
             }
-            app.copy(percentageOfTop = percentage)
+        }
+
+        private fun highlightPeakDay(dailyList: List<DailyUsage>): List<DailyUsage> {
+            val peakDuration = dailyList.maxOfOrNull { it.duration } ?: Duration.ZERO
+            return dailyList.map { daily ->
+                daily.copy(isPeakDay = peakDuration > Duration.ZERO && daily.duration == peakDuration)
+            }
+        }
+
+        private fun normalizeAndRankTopApps(apps: List<AppUsage>): List<AppUsage> {
+            val sortedApps =
+                apps
+                    .filter { it.usageDuration > Duration.ZERO }
+                    .sortedByDescending { it.usageDuration }
+                    .take(MAX_TOP_APPS)
+
+            val highestDuration = sortedApps.firstOrNull()?.usageDuration ?: Duration.ZERO
+
+            return sortedApps.map { app ->
+                val percentage =
+                    if (highestDuration > Duration.ZERO) {
+                        (app.usageDuration / highestDuration).toFloat().coerceIn(0f, 1f)
+                    } else {
+                        0f
+                    }
+                app.copy(percentageOfTop = percentage)
+            }
+        }
+
+        companion object {
+            private const val REPORT_DAYS = 7L
+            private const val MAX_TOP_APPS = 10
         }
     }
-
-    companion object {
-        private const val REPORT_DAYS = 7L
-        private const val MAX_TOP_APPS = 10
-    }
-}

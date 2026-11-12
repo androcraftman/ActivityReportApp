@@ -36,43 +36,45 @@ private const val BAR_WIDTH_FRACTION = 0.75f
 @Composable
 fun DailyUsageChart(
     dailyBars: List<DailyBarUi>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
                 text = "Daily app usage",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = "Total foreground time per day",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(ChartHeight),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(ChartHeight),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Bottom,
             ) {
                 dailyBars.forEach { bar ->
                     DailyBarColumn(
                         bar = bar,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 }
             }
@@ -83,31 +85,34 @@ fun DailyUsageChart(
 @Composable
 private fun DailyBarColumn(
     bar: DailyBarUi,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Bottom,
     ) {
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.BottomCenter
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            contentAlignment = Alignment.BottomCenter,
         ) {
-            val ratio = if (bar.heightRatio > 0f) {
-                bar.heightRatio.coerceAtLeast(MIN_BAR_RATIO)
-            } else {
-                0f
-            }
+            val ratio =
+                if (bar.heightRatio > 0f) {
+                    bar.heightRatio.coerceAtLeast(MIN_BAR_RATIO)
+                } else {
+                    0f
+                }
             if (ratio > 0f) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(BAR_WIDTH_FRACTION)
-                        .fillMaxHeight(ratio)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (bar.isPeakDay) PeakDayColor else RegularDayColor)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(BAR_WIDTH_FRACTION)
+                            .fillMaxHeight(ratio)
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(if (bar.isPeakDay) PeakDayColor else RegularDayColor),
                 )
             } else {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -118,12 +123,13 @@ private fun DailyBarColumn(
             text = bar.dayLabel,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = if (bar.isPeakDay) FontWeight.Bold else FontWeight.Normal,
-            color = if (bar.isPeakDay) {
-                MaterialTheme.colorScheme.onSurface
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            },
-            textAlign = TextAlign.Center
+            color =
+                if (bar.isPeakDay) {
+                    MaterialTheme.colorScheme.onSurface
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -134,16 +140,17 @@ private fun DailyBarColumn(
 fun DailyUsageChartPreview() {
     WeeklyActivityTheme {
         DailyUsageChart(
-            dailyBars = listOf(
-                DailyBarUi("Mon", "2h 10m", 0.35f, isPeakDay = false),
-                DailyBarUi("Tue", "3h 40m", 0.55f, isPeakDay = false),
-                DailyBarUi("Wed", "4h 15m", 0.65f, isPeakDay = false),
-                DailyBarUi("Thu", "3h 05m", 0.45f, isPeakDay = false),
-                DailyBarUi("Fri", "6h 20m", 1.0f, isPeakDay = true),
-                DailyBarUi("Sat", "4h 50m", 0.70f, isPeakDay = false),
-                DailyBarUi("Sun", "2h 15m", 0.32f, isPeakDay = false)
-            ),
-            modifier = Modifier.padding(16.dp)
+            dailyBars =
+                listOf(
+                    DailyBarUi("Mon", "2h 10m", 0.35f, isPeakDay = false),
+                    DailyBarUi("Tue", "3h 40m", 0.55f, isPeakDay = false),
+                    DailyBarUi("Wed", "4h 15m", 0.65f, isPeakDay = false),
+                    DailyBarUi("Thu", "3h 05m", 0.45f, isPeakDay = false),
+                    DailyBarUi("Fri", "6h 20m", 1.0f, isPeakDay = true),
+                    DailyBarUi("Sat", "4h 50m", 0.70f, isPeakDay = false),
+                    DailyBarUi("Sun", "2h 15m", 0.32f, isPeakDay = false),
+                ),
+            modifier = Modifier.padding(16.dp),
         )
     }
 }

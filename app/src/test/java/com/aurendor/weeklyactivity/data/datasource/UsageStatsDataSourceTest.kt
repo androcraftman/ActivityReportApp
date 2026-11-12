@@ -9,35 +9,36 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 class UsageStatsDataSourceTest {
-
     @Test
     fun `cross-midnight session splits evenly across two days and zero-fills remaining days`() {
         val zone = ZoneOffset.UTC
         val windowStart = Instant.parse("2026-11-06T00:00:00Z")
         val windowEnd = Instant.parse("2026-11-12T12:00:00Z")
 
-        val events = listOf(
-            RawUsageEvent(
-                packageName = "com.example.app",
-                className = "MainActivity",
-                isForeground = true,
-                timestampMillis = Instant.parse("2026-11-07T23:30:00Z").toEpochMilli()
-            ),
-            RawUsageEvent(
-                packageName = "com.example.app",
-                className = "MainActivity",
-                isForeground = false,
-                timestampMillis = Instant.parse("2026-11-08T00:30:00Z").toEpochMilli()
+        val events =
+            listOf(
+                RawUsageEvent(
+                    packageName = "com.example.app",
+                    className = "MainActivity",
+                    isForeground = true,
+                    timestampMillis = Instant.parse("2026-11-07T23:30:00Z").toEpochMilli(),
+                ),
+                RawUsageEvent(
+                    packageName = "com.example.app",
+                    className = "MainActivity",
+                    isForeground = false,
+                    timestampMillis = Instant.parse("2026-11-08T00:30:00Z").toEpochMilli(),
+                ),
             )
-        )
 
-        val result = UsageStatsDataSource.calculateUsageMetrics(
-            events = events,
-            windowStart = windowStart,
-            windowEnd = windowEnd,
-            zone = zone,
-            ownPackageName = "com.aurendor.weeklyactivity"
-        )
+        val result =
+            UsageStatsDataSource.calculateUsageMetrics(
+                events = events,
+                windowStart = windowStart,
+                windowEnd = windowEnd,
+                zone = zone,
+                ownPackageName = "com.aurendor.weeklyactivity",
+            )
 
         assertEquals(7, result.dailyUsage.size)
 

@@ -13,16 +13,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindPermissionRepository(impl: PermissionRepositoryImpl): PermissionRepository
 
     @Binds
     @Singleton
-    abstract fun bindPermissionRepository(
-        impl: PermissionRepositoryImpl
-    ): PermissionRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindActivityReportRepository(
-        impl: ActivityReportRepositoryImpl
-    ): ActivityReportRepository
+    abstract fun bindActivityReportRepository(impl: ActivityReportRepositoryImpl): ActivityReportRepository
 }

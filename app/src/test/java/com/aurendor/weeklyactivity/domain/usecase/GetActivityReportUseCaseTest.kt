@@ -11,17 +11,20 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 import java.io.IOException
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -48,6 +51,7 @@ class GetActivityReportUseCaseTest {
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull() is ActivityReportError.UsagePermissionRequired)
         coVerify(exactly = 0) { repository.getActivityReport(any(), any(), any()) }
+        verify(exactly = 0) { permissionRepository.hasNotificationAccess() }
     }
 
     @Test
@@ -63,6 +67,29 @@ class GetActivityReportUseCaseTest {
 
         assertTrue(result.isSuccess)
         coVerify(exactly = 1) { repository.getActivityReport(expectedStart, expectedEnd, true) }
+    }
+
+    @Test
+    fun `invoke queries repository with exact 7 local calendar day window in non-UTC timezone`() = runTest {
+        val laZone = ZoneId.of("America/Los_Angeles")
+        val laInstant = Instant.parse("2026-11-12T02:00:00Z")
+        val laClock = Clock.fixed(laInstant, laZone)
+        val laUseCase = GetActivityReportUseCase(
+            activityReportRepository = repository,
+            permissionRepository = permissionRepository,
+            clock = laClock
+        )
+
+        every { permissionRepository.hasUsageAccess() } returns true
+        every { permissionRepository.hasNotificationAccess() } returns true
+        val expectedStart = Instant.parse("2026-11-05T08:00:00Z")
+        val expectedEnd = laInstant
+        coEvery { repository.getActivityReport(expectedStart, expectedEnd, any()) } returns createDummyReport()
+
+        val result = laUseCase()
+
+        assertTrue(result.isSuccess)
+        coVerify(exactly = 1) { repository.getActivityReport(expectedStart, expectedEnd, any()) }
     }
 
     @Test
@@ -86,7 +113,7 @@ class GetActivityReportUseCaseTest {
 
         try {
             useCase()
-            org.junit.Assert.fail("Expected CancellationException to be rethrown")
+            fail("Expected CancellationException to be rethrown")
         } catch (e: CancellationException) {
             assertEquals("Cancelled", e.message)
         }

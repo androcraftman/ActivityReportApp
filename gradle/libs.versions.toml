@@ -16,7 +16,7 @@ turbine = "1.2.0"
 hiltNavigationCompose = "1.2.0"
 ktlint = "12.1.2"
 detekt = "1.23.8"
-room = "2.6.1"
+room = "2.7.2"
 
 [libraries]
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -55,4 +55,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+room = { id = "androidx.room", version.ref = "room" }
 

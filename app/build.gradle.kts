@@ -5,7 +5,12 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.room)
     jacoco
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
